@@ -15,7 +15,7 @@ namespace SMSHandler.Controllers
         }
 
         [Route("new-sms")]
-        public async Task<IActionResult> NewSms(string from, string phonenumber, string message)
+        public async Task<IActionResult> NewSms(string from, string to, string message)
         {
             var apiKey = Configuration.GetValue<string>("SENDGRID_API_KEY");
             var emailFromAddress = Configuration.GetValue<string>("EMAIL_FROM_ADDRESS");
@@ -24,18 +24,18 @@ namespace SMSHandler.Controllers
 
             var client = new SendGridClient(apiKey);
             var emaiFrom = new EmailAddress(emailFromAddress, "New SMS");
-            var to = new EmailAddress(emailToAddress, emailToName);
+            var toEmail = new EmailAddress(emailToAddress, emailToName);
 
             var subject = "New SMS received";
             var plainTextContent = $@"From: {from}
-To: {phonenumber}
+To: {to}
 Message: {message}";
 
             var htmlContent = $@"<strong>From: </strong>{from}<br />
-<strong>To: </strong>{phonenumber}<br />
+<strong>To: </strong>{to}<br />
 <strong>Message: </strong>{message}<br />";
 
-            var msg = MailHelper.CreateSingleEmail(emaiFrom, to, subject, plainTextContent, htmlContent);
+            var msg = MailHelper.CreateSingleEmail(emaiFrom, toEmail, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
             return Content("Yes!");
         }
