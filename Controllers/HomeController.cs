@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using SMSHandler.Models;
 
 namespace SMSHandler.Controllers
 {
@@ -38,6 +40,12 @@ Message: {message}";
             var msg = MailHelper.CreateSingleEmail(emaiFrom, toEmail, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
             return Content("Yes!");
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
