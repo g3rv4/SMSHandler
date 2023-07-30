@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -7,6 +8,7 @@ namespace SMSHandler
     {
         public static void Main(string[] args)
         {
+            Config.Init(Environment.GetEnvironmentVariable("CONFIG_PATH"));
             CreateHostBuilder(args).Build().Run();
         }
 
